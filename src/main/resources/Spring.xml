@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--扫描除控制层以外的组件-->
+    <context:component-scan base-package="com.atguigu">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--引入jdbc.properties-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--配置SqlSessionFactory-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--设置数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+        <!--设置核心配置文件的路径-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <!--设置类型别名所对应的包-->
+        <property name="typeAliasesPackage" value="com.atguigu.pojo"></property>
+        <!--
+                设置映射文件的路径
+                若配置了MapperScannerConfigurer的bean，当前映射文件的路径必须和其中所设置的mapper接口的包一致，此时不需要设置该属性
+                若映射文件的路径和其中所设置的mapper接口的包不一致，此时必须通过该属性设置映射文件的路径
+            -->
+        <!--<property name="mapperLocations" value="classpath:mappers/*.xml"></property>-->
+    </bean>
+
+    <!--
+        配置mapper接口的扫描
+        将指定的包下，所有的mapper接口，通过SqlSession的getMapper()所获取的实现类对象交给IOC容器管理
+    -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.atguigu.mapper"></property>
+    </bean>
+
+</beans>

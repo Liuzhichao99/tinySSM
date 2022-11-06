@@ -1,0 +1,9 @@
+.buttonMine {
+    border: solid #ccc 1px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 1px 1px #ccc;
+    box-shadow: 0 1px 1px #ccc;
+    background: #B0CC7F;
+    margin: 0 2px 0;
+}

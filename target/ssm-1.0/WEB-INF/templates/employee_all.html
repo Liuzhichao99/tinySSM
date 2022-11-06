@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>所有员工列表</title>
+    <link rel="stylesheet" th:href="@{/static/css/index_work.css}">
+    <link rel="stylesheet" th:href="@{/static/css/myTable_work.css}">
+    <style type="text/css">
+        span{margin-left: 10px; margin-right: 10px;}
+    </style>
+</head>
+<body>
+<div id="app">
+    <table>
+        <tr>
+            <th colspan="6">员工列表</th>
+        </tr>
+        <tr>
+            <th>序号</th>
+            <th>员工姓名</th>
+            <th>年龄</th>
+            <th>性别</th>
+            <th>邮箱</th>
+            <th>操作 <a class="buttonMine" th:href="@{/employee_toAdd}">添加</a></th>
+        </tr>
+        <tr th:each="employee,status : ${employeeList}">
+            <td th:text="${employee.empId}"></td>
+            <td th:text="${employee.empName}"></td>
+            <td th:text="${employee.age}"></td>
+            <td th:if="${employee.gender == 1}" th:text="男"></td>
+            <td th:unless="${employee.gender == 1}" th:text="女"></td>
+            <td th:text="${employee.email}"></td>
+            <td>
+                <a th:href="@{/employee/} + ${employee.empId}" @click="deleteEmployee()">删除</a>
+                <a th:href="@{/employee/} + ${employee.empId}">修改</a>
+            </td>
+        </tr>
+    </table>
+    <div>
+        <center>
+            共<span th:text="${total}"></span>条
+        </center>
+    </div>
+    <form id="deleteForm" method="post">
+        <input type="hidden" name="_method" value="delete">
+    </form>
+</div>
+
+<script type="text/javascript" th:src="@{/static/js/vue.js}"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el:"#app",
+        methods:{
+            deleteEmployee() {
+                if (confirm("您确定删除吗")) {
+                    //获取表单对象
+                    var deleteForm = document.getElementById("deleteForm");
+                    //将点击超链接的属性赋值给表单的action属性
+                    deleteForm.action = event.target.href;
+                    //提交表单
+                    deleteForm.submit();
+                }
+                event.preventDefault();
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
